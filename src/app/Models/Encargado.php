@@ -9,10 +9,13 @@ class Encargado extends Model
 {
     use HasFactory;
 
-    protected $table = 'encargados';
-
     protected $fillable = [
         'dni',
-        'usuario_id'
+        'usuario_id',
     ];
+
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class);
+    }
 }
