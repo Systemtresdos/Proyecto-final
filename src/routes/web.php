@@ -19,6 +19,8 @@ use App\Models\Rol;
 use App\Models\User;
 use App\Models\Venta;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UsuarioController;
+Route::resource('usuarios', UsuarioController::class);
 
 Route::get('/', function () {
     return view('welcome');

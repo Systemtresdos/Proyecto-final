@@ -1,20 +1,15 @@
 <?php
-
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class Usuario extends Model
+class Usuario extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    protected $table = 'usuarios';
+
     protected $fillable = [
         'nombre',
         'telefono',
@@ -25,35 +20,13 @@ class Usuario extends Model
         'rol_id',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    // Relación: un usuario pertenece a un rol
+    public function rol()
     {
-        return [
-            'correo_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
-    public function cliente(){
-        return $this->hasMany(Cliente::class);
-    }
-    public function encargado(){
-        return $this->hasMany(Encargado::class);
-    }
-    public function rol(){
-        return $this->belongsTo(rol::class);
+        return $this->belongsTo(Rol::class);
     }
 }
+
+?>
