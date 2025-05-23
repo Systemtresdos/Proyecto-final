@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Categoria;
 use App\Models\Producto;
-use App\Models\Proveedor;
 use Illuminate\Http\Request;
 
 class ProductoController extends Controller
@@ -31,7 +30,6 @@ class ProductoController extends Controller
 }
 
     public function verCarritoCompra() {
-        $proveedores = Proveedor::all();
         $productos = Producto::all();
         $carritoCompra = session()->get('carritoCompra', []);
         return view('carritoCompra', compact('carritoCompra','proveedores','productos'));
@@ -144,7 +142,6 @@ class ProductoController extends Controller
     }
     public function create()
     {
-        $proveedors = Proveedor::all();
         $categorias = Categoria::all();
         return view('productos.create', compact('categorias'));
     }

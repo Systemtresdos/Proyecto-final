@@ -10,6 +10,12 @@ class Usuario extends Authenticatable
 
     protected $table = 'usuarios';
 
+    protected $table = 'usuarios';
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
     protected $fillable = [
         'nombre',
         'telefono',

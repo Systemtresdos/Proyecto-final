@@ -2,84 +2,110 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UsuarioRequest;
-use App\Models\Usuario;
 use App\Models\Rol;
+use App\Models\Usuario;
+use Illuminate\Validation\Rules;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UsuarioController extends Controller
 {
-    /**
-     * Mostrar lista de usuarios.
-     */
-    public function index()
+    public function indice()
     {
-        $usuarios = Usuario::with('rol')->paginate(10);
+        $usuarios = Usuario::all();
         return view('usuarios.index', compact('usuarios'));
     }
 
     /**
-     * Mostrar formulario para crear un nuevo usuario.
+     * Show the form for creating a new resource.
      */
-    public function create()
+    public function vistaCrear()
     {
-        $roles = Rol::pluck('nombre', 'id');
+        $roles = Rol::all();
         return view('usuarios.create', compact('roles'));
     }
 
     /**
-     * Guardar un nuevo usuario en la base de datos.
+     * Store a newly created resource in storage.
      */
-    public function store(UsuarioRequest $request)
+    public function registrar(Request $request)
     {
-        $data = $request->validated();
-        $data['password'] = bcrypt($data['password']);
-        Usuario::create($data);
-        return redirect()->route('usuarios.index')
-                         ->with('success', 'Usuario creado correctamente.');
+        $request->validate([
+            'nombre' => ['required', 'string', 'alpha', 'max:255'],
+            'apellido_p' => ['required', 'string', 'alpha', 'max:255'],
+            'apellido_m' => ['required', 'string', 'alpha', 'max:255'],
+            'ci' => ['required', 'string','max:8', 'unique:'.Usuario::class],
+            'telefono' => ['required', 'string', 'max:10', 'unique:'.Usuario::class],
+            'usuario' => ['required', 'string', 'max:255', 'unique:'.Usuario::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'rol_id' => ['required', 'exists:rols,id']
+        ]);
+
+        $usuario = Usuario::create([
+            'nombre' => ucwords(strtolower($request->nombre)),
+            'apellido_p' => ucwords(strtolower($request->apellido_p)),
+            'apellido_m' => ucwords(strtolower($request->apellido_m)),
+            'ci' => $request->ci,
+            'telefono' => $request->telefono,
+            'usuario' => $request->usuario,
+            'password' => Hash::make($request->password),
+            'rol_id' => $request->rol_id
+        ]);
+        session()->flash('success', 'Se ha registrado exitosamente a: ' . $usuario->nombre);
+        return redirect()->route('usuarios.index');
     }
 
-    /**
-     * Mostrar detalles de un usuario específico.
-     */
-    public function show(Usuario $usuario)
+    public function vistaEditar(string $id)
     {
-        return view('usuarios.show', compact('usuario'));
-    }
-
-    /**
-     * Mostrar formulario para editar un usuario.
-     */
-    public function edit(Usuario $usuario)
-    {
-        $roles = Rol::pluck('nombre', 'id');
+        $usuario = Usuario::with('rol')->findOrFail($id);
+        $roles = Rol::all();
         return view('usuarios.edit', compact('usuario', 'roles'));
     }
 
     /**
-     * Actualizar un usuario en la base de datos.
+     * Update the specified resource in storage.
      */
-    public function update(UsuarioRequest $request, Usuario $usuario)
-    {
-        $data = $request->validated();
+    public function actualizar(Request $request, string $id)
+{
+    $request->validate([
+        'nombre' => ['required', 'string', 'max:255'],
+        'apellido_p' => ['required', 'string', 'max:255'],
+        'apellido_m' => ['required', 'string', 'max:255'],
+        'ci' => ['required', 'string', 'max:8', 'unique:users,ci,' . $id],
+        'telefono' => ['required', 'string', 'max:10', 'unique:users,telefono,' . $id],
+        'usuario' => ['required', 'string', 'max:255', 'unique:users,usuario,' . $id],
+        'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
+        'rol_id' => ['required', 'exists:rols,id'],
+        'estado' => ['required', 'in:Activo,Inactivo,Bloqueado'],
+    ]);
 
-        if (!empty($data['password'])) {
-            $data['password'] = bcrypt($data['password']);
-        } else {
-            unset($data['password']);
-        }
+    $usuario = Usuario::findOrFail($id);
 
-        $usuario->update($data);
-        return redirect()->route('usuarios.index')
-                         ->with('success', 'Usuario actualizado correctamente.');
+    $usuario->update([
+        'nombre' => ucwords(strtolower($request->nombre)),
+        'apellido_p' => ucwords(strtolower($request->apellido_p)),
+        'apellido_m' => ucwords(strtolower($request->apellido_m)),
+        'ci' => $request->ci,
+        'telefono' => $request->telefono,
+        'usuario' => $request->usuario,
+        'estado' => $request->estado,
+        'rol_id' => $request->rol_id
+    ]);
+
+    if ($request->filled('password')) {
+        $usuario->update([
+            'password' => Hash::make($request->password),
+        ]);
     }
+    session()->flash('success', 'Se ha modificado exitosamente a: ' . $usuario->nombre);
+    return redirect()->route('usuarios.index');
+}
 
-    /**
-     * Eliminar un usuario de la base de datos.
-     */
-    public function destroy(Usuario $usuario)
+    public function eliminar(string $id)
     {
+        $usuario = Usuario::findOrFail($id);
         $usuario->delete();
-        return back()->with('success', 'Usuario eliminado correctamente.');
+        session()->flash('success', 'Se ha elimininado exitosamente a: ' . $usuario->nombre);
+        return redirect()->route('usuarios.index');
     }
 }
