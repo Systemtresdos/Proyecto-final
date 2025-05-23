@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Categoria;
-use App\Models\Proveedor;
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Encargado;
+use App\Models\Usuario;
 use Illuminate\Database\Seeder;
 
 class UsuarioSeeder extends Seeder
@@ -15,25 +13,17 @@ class UsuarioSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
+        Usuario::create([
             'nombre' => 'Ditmar',
-            'apellido_p' => 'Rojas',
-            'apellido_m' => 'Canelas',
-            'ci' => '12345678',
-            'telefono' => '123456789',
-            'usuario' => 'ditmar',
+            'telefono' => '00000000',
+            'direccion' => 'Av. Siempre Viva 123',
+            'correo' => 'ditmar@gmail.com',
             'password' => '123456789',
             'rol_id' => 1,  
         ]);
-        User::create([
-            'nombre' => 'Arleth',
-            'apellido_p' => 'Ricaldez',
-            'apellido_m' => 'Tapia',
-            'ci' => '87654321',
-            'telefono' => '987654321',
-            'usuario' => 'arleth',
-            'password' => '123456789',
-            'rol_id' => 2,  
+        Encargado::create([
+            'dni' => '01010101',
+            'usuario_id' => 1,
         ]);
     
     }

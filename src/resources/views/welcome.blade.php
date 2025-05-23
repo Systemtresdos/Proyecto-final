@@ -1554,11 +1554,11 @@
                 <x-auth-session-status class="mb-4" :status="session('status')" />
                 <div class="bg-white p-8 rounded-xl shadow-sm border border-[#A1A1A1]/20 space-y-5">
                     <div>
-                        <label for="usuario" class="block text-sm font-medium text-[#2B2B2B]">Usuario</label>
-                        <input id="usuario" type="text" name="usuario" :value="old('usuario')"
+                        <label for="correo" class="block text-sm font-medium text-[#2B2B2B]">Correo</label>
+                        <input id="correo" type="text" name="correo" :value="old('correo')"
                             placeholder="Nombre de usuario"
                             class="mt-1 block w-full px-4 py-3 bg-white border border-[#A1A1A1]/40 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#D1E7DD] focus:border-[#166534]/50"
-                            autocomplete="usuario" />
+                            autocomplete="correo" />
                         <x-input-error :messages="$errors->get('usuario')" class="mt-1 text-xs text-red-500" />
                     </div>
                     <div x-data="{ tipo: 'password' }">

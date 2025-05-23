@@ -26,7 +26,7 @@
                 <div class="flex justify-between items-center">
                     <div>
                         <p class="text-[#A1A1A1]">Ventas Totales</p>
-                        <h3 class="text-2xl font-bold text-[#2B2B2B]">{{ number_format($ventas->count()) }}</h3>
+                        <h3 class="text-2xl font-bold text-[#2B2B2B]">{{ number_format($pedidos->count()) }}</h3>
                     </div>
                     <div class="bg-[#D1E7DD] p-3 rounded-full">
                         <svg class="w-6 h-6 text-[#166534]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,7 +35,7 @@
                         </svg>
                     </div>
                 </div>
-                <p class="text-sm text-[#A1A1A1] mt-2">{{ number_format($ventas->sum('total'), 2) }} (Total)</p>
+                <p class="text-sm text-[#A1A1A1] mt-2">{{ number_format($pedidos->sum('total'), 2) }} (Total)</p>
             </div>
 
             <!-- Productos -->
@@ -55,7 +55,7 @@
                 <p class="text-sm text-[#A1A1A1] mt-2">{{ $categorias->count() }} categorías</p>
             </div>
 
-            <!-- Compras -->
+            {{-- <!-- Compras -->
             <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-[#166534]">
                 <div class="flex justify-between items-center">
                     <div>
@@ -70,9 +70,9 @@
                     </div>
                 </div>
                 <p class="text-sm text-[#A1A1A1] mt-2">{{ number_format($compras->sum('total'), 2) }} Bs (Total)</p>
-            </div>
+            </div> --}}
 
-            <!-- Proveedores -->
+            {{-- <!-- Proveedores -->
             <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-[#166534]">
                 <div class="flex justify-between items-center">
                     <div>
@@ -87,7 +87,7 @@
                     </div>
                 </div>
                 <p class="text-sm text-[#A1A1A1] mt-2">{{ $user->count() }} usuarios</p>
-            </div>
+            </div> --}}
         </div>
 
         <!-- Gráficos y Tablas -->
@@ -117,14 +117,14 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-[#D1E7DD]">
-                            @foreach ($ventas->take(5) as $venta)
+                            @foreach ($pedidos->take(5) as $pedido)
                                 <tr>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-[#2B2B2B]">#{{ $venta->id }}
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-[#2B2B2B]">#{{ $pedido->id }}
                                     </td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-[#A1A1A1]">
-                                        {{ $venta->created_at->format('d/m/Y') }}</td>
+                                        {{ $pedido->created_at->format('d/m/Y') }}</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-[#2B2B2B]">
-                                        {{ number_format($venta->total, 2) }} Bs</td>
+                                        {{ number_format($pedido->total, 2) }} Bs</td>
                                     <td class="px-4 py-3 whitespace-nowrap">
                                         <span
                                             class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-[#D1E7DD] text-[#166534]">Completado</span>
@@ -155,9 +155,6 @@
                                     Categoría</th>
                                 <th
                                     class="px-4 py-3 text-left text-xs font-medium text-[#A1A1A1] uppercase tracking-wider">
-                                    Stock</th>
-                                <th
-                                    class="px-4 py-3 text-left text-xs font-medium text-[#A1A1A1] uppercase tracking-wider">
                                     Precio</th>
                             </tr>
                         </thead>
@@ -179,10 +176,6 @@
                                     </td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-[#A1A1A1]">
                                         {{ $producto->categoria->nombre ?? 'N/A' }}
-                                    </td>
-                                    <td
-                                        class="px-4 py-3 whitespace-nowrap text-sm {{ $producto->stock < 5 ? 'text-red-600 font-bold' : 'text-[#2B2B2B]' }}">
-                                        {{ $producto->stock }}
                                     </td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-[#2B2B2B]">
                                         {{ number_format($producto->precio_venta, 2) }} Bs
