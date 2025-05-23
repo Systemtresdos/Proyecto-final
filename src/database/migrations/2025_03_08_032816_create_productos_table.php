@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('precio_venta',10,2)->default(0);
             $table->string('imagen')->nullable();
             $table->integer('calificacion')->default(0);
-            $table->enum('estado',['Disponible','Agotado'])->default('No_disponible');
+            $table->enum('estado',['Disponible','Agotado'])->default('Agotado');
             $table->foreignId('categoria_id')->nullable()->constrained('categorias')->onDelete('set null');
             $table->timestamps();
         });
